@@ -32,7 +32,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
     }
 
-    SearchAdapter(List<User> list) {
+    public SearchAdapter(List<User> list) {
         filteredSearchResult = list;
         fullSearchResult = new ArrayList<>(filteredSearchResult);
     }

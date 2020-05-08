@@ -28,4 +28,9 @@ public class User {
     public String getAvatarUrl(){
         return avatar_url;
     }
+
+    public User(String login, String url){
+        this.login = login;
+        this.avatar_url = url;
+    }
 }

@@ -6,11 +6,11 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface APIEndPoint {
 
     @GET(APIConfig.END_POINT_SEARCH_USERS)
-    Call<List<User>> getSearchUserResult(@Path("q") String param);
+    Call<List<User>> getSearchUserResult(@Query("q") String param);
 
 }
