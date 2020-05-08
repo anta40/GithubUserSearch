@@ -1,5 +1,7 @@
 package com.divbyzero.app.githubusersearch.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,16 +25,17 @@ public class UserViewModel extends ViewModel {
     public void setSearchResult(String param){
         Retrofit retrofit = APIService.getRetrofitService();
         APIEndPoint apiEndpoint = retrofit.create(APIEndPoint.class);
-        Call<List<User>> call = apiEndpoint.getSearchUserResult(param);
+        Call<List<User>> call = apiEndpoint.getSearchResult(param);
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 mutableLiveData.setValue((ArrayList<User>) response.body());
+                Log.d("DBG", "OK");
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-
+                Log.d("DBG", "Failed");
             }
         });
     }

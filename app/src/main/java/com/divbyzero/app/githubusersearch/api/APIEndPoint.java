@@ -11,6 +11,6 @@ import retrofit2.http.Query;
 public interface APIEndPoint {
 
     @GET(APIConfig.END_POINT_SEARCH_USERS)
-    Call<List<User>> getSearchUserResult(@Query("q") String param);
+    Call<List<User>> getSearchResult(@Query("q") String param);
 
 }
