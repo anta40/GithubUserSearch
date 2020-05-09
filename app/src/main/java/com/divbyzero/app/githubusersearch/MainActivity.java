@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
     SearchAdapter searchAdapter;
     RecyclerView recyclerView;
     Context context;
-    int currentPage, totalPage;
-    boolean isLastPage, isLoading;
+    int currentPage, totalCount, TOTAL_PAGES;
     UserViewModel viewModel;
     String who;
 
@@ -40,16 +39,16 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         setUpRecyclerView();
         currentPage = 1;
-        isLastPage = false;
-        isLoading = false;
-        totalPage = 0;
+        totalCount = 33; // currently hardcoded, because viewModel.getTotalCount() is not working correctly
+        TOTAL_PAGES = (int)Math.ceil((double) totalCount/(double) 30);
         viewModel = viewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
     }
 
     private void doSearchUser(String who, int pageNum) {
-        totalPage = viewModel.getTotalPage();
+        totalCount = viewModel.getTotalCount();
         viewModel.setSearchResult(who, pageNum);
+
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
             @Override
             public void onChanged(ArrayList<User> theList) {
@@ -75,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 
                 if(!recyclerView.canScrollVertically(1) && dy != 0) {
-                    currentPage++;
-                    doSearchUser(who, currentPage);
+                    if (currentPage < TOTAL_PAGES) {
+                        currentPage++;
+                        doSearchUser(who, currentPage);
+                    }
                 }
             }
         });
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 who = query;
                 currentPage = 1;
+                searchAdapter.clear();
                 doSearchUser(query, currentPage);
                 //searchAdapter.getFilter().filter(query);
                 return false;

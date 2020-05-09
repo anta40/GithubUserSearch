@@ -22,6 +22,7 @@ import java.util.List;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> implements Filterable {
     private List<User> fullSearchResult;
     private List<User> filteredSearchResult;
+    private List<User> theData;
     private Context ctxt;
 
     class SearchViewHolder extends RecyclerView.ViewHolder {
@@ -37,8 +38,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     public SearchAdapter(Context ctxt, List<User> list) {
         this.ctxt = ctxt;
-        filteredSearchResult = list;
-        fullSearchResult = new ArrayList<>(filteredSearchResult);
+        theData = list;
+    }
+
+    public void clear() {
+        int size = theData.size();
+        theData.clear();
+        notifyItemRangeRemoved(0, size);
     }
 
     @NonNull
@@ -51,7 +57,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
-        User user = fullSearchResult.get(position);
+        User user = theData.get(position);
         Glide.with(ctxt)
                 .load(user.getAvatarUrl())
                 .override(200, 200)
@@ -61,7 +67,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     @Override
     public int getItemCount() {
-        return filteredSearchResult.size();
+        return theData.size();
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.divbyzero.app.githubusersearch.response.SearchResponse;
 import com.divbyzero.app.githubusersearch.model.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,7 +22,8 @@ import retrofit2.Retrofit;
 public class UserViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<User>> mutableLiveData = new MutableLiveData<>();
-    private int totalPage;
+    private int totalCount;
+    private ArrayList<User> savedData = new ArrayList<User>();
 
     public void setSearchResult(String who, int page){
         Retrofit retrofit = APIService.getRetrofitService();
@@ -30,9 +32,13 @@ public class UserViewModel extends ViewModel {
         call.enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
-                mutableLiveData.setValue((ArrayList<User>) response.body().getItems());
-                totalPage = response.body().getTotalCount();
-                Log.d("DBG", "OK");
+                if (response.body() != null) {
+                        savedData.addAll(response.body().getItems());
+                        //mutableLiveData.setValue((ArrayList<User>) response.body().getItems());
+                        mutableLiveData.setValue(savedData);
+                        totalCount = response.body().getTotalCount();
+                        Log.d("DBG", "OK");
+                }
             }
 
             @Override
@@ -47,10 +53,11 @@ public class UserViewModel extends ViewModel {
     }
 
     public void clear(){
+        savedData.clear();
         mutableLiveData.setValue(new ArrayList<User>());
     }
 
-    public int getTotalPage(){
-        return totalPage;
+    public int getTotalCount(){
+        return totalCount;
     }
 }
