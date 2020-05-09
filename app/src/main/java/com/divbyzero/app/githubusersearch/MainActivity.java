@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import com.divbyzero.app.githubusersearch.adapter.SearchAdapter;
 import com.divbyzero.app.githubusersearch.model.User;
@@ -27,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
     SearchAdapter searchAdapter;
     RecyclerView recyclerView;
     Context context;
+    int currentPage, totalPage;
+    boolean isLastPage, isLoading;
+    UserViewModel viewModel;
+    String who;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +39,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
         setUpRecyclerView();
+        currentPage = 1;
+        isLastPage = false;
+        isLoading = false;
+        totalPage = 0;
+        viewModel = viewModel = new ViewModelProvider(this,
+                new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
     }
 
-    private void doSearchUser(String param) {
-        UserViewModel viewModel = new ViewModelProvider(this,
-                new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
-
-        viewModel.setSearchResult(param);
+    private void doSearchUser(String who, int pageNum) {
+        totalPage = viewModel.getTotalPage();
+        viewModel.setSearchResult(who, pageNum);
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
             @Override
             public void onChanged(ArrayList<User> theList) {
@@ -53,12 +62,24 @@ public class MainActivity extends AppCompatActivity {
     private void setUpRecyclerView() {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         List<User> userList = new ArrayList<User>();
         searchAdapter = new SearchAdapter(context, userList) ;
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(searchAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                if(!recyclerView.canScrollVertically(1) && dy != 0) {
+                    currentPage++;
+                    doSearchUser(who, currentPage);
+                }
+            }
+        });
     }
 
     @Override
@@ -72,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                doSearchUser(query);
+                who = query;
+                currentPage = 1;
+                doSearchUser(query, currentPage);
                 //searchAdapter.getFilter().filter(query);
                 return false;
             }

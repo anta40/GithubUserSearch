@@ -1,19 +1,21 @@
-package com.divbyzero.app.githubusersearch.model;
+package com.divbyzero.app.githubusersearch.response;
+
+import com.divbyzero.app.githubusersearch.model.User;
 
 import java.util.List;
 
 public class SearchResponse {
-    private long totalCount;
+    private int totalCount;
     private boolean incompleteResults;
     private List<User> items;
 
-    public SearchResponse(long totalCount, boolean incompleteResults, List<User> items){
+    public SearchResponse(int totalCount, boolean incompleteResults, List<User> items){
         this.totalCount = totalCount;
         this.incompleteResults = incompleteResults;
         this.items = items;
     }
 
-    public long getTotalCount(){
+    public int getTotalCount(){
         return totalCount;
     }
 
