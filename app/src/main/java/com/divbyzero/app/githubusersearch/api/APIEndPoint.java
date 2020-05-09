@@ -1,6 +1,6 @@
 package com.divbyzero.app.githubusersearch.api;
 
-import com.divbyzero.app.githubusersearch.model.User;
+import com.divbyzero.app.githubusersearch.model.SearchResponse;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ import retrofit2.http.Query;
 public interface APIEndPoint {
 
     @GET(APIConfig.END_POINT_SEARCH_USERS)
-    Call<List<User>> getSearchResult(@Query("q") String param);
+    Call<SearchResponse> getSearchResult(@Query("q") String param);
 
 }
