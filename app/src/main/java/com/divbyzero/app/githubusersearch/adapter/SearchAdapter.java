@@ -1,5 +1,6 @@
 package com.divbyzero.app.githubusersearch.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.divbyzero.app.githubusersearch.R;
 import com.divbyzero.app.githubusersearch.model.User;
 
@@ -20,19 +22,21 @@ import java.util.List;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> implements Filterable {
     private List<User> fullSearchResult;
     private List<User> filteredSearchResult;
+    private Context ctxt;
 
     class SearchViewHolder extends RecyclerView.ViewHolder {
         ImageView github_profile_pic;
         TextView github_login;
 
-        SearchViewHolder(View itemView) {
+       public SearchViewHolder(View itemView) {
             super(itemView);
             github_profile_pic = itemView.findViewById(R.id.github_profile_pic);
             github_login  = itemView.findViewById(R.id.github_login);
         }
     }
 
-    public SearchAdapter(List<User> list) {
+    public SearchAdapter(Context ctxt, List<User> list) {
+        this.ctxt = ctxt;
         filteredSearchResult = list;
         fullSearchResult = new ArrayList<>(filteredSearchResult);
     }
@@ -48,8 +52,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
         User user = fullSearchResult.get(position);
-
-        //holder.imageView.setImageResource(currentItem.getImageResource());
+        Glide.with(ctxt)
+                .load(user.getAvatarUrl())
+                .override(200, 200)
+                .into(holder.github_profile_pic);
         holder.github_login.setText(user.getLogin());
     }
 

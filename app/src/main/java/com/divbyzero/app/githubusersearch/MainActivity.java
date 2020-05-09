@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
     SearchAdapter searchAdapter;
     RecyclerView recyclerView;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = getApplicationContext();
         setUpRecyclerView();
     }
 
@@ -42,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
             @Override
             public void onChanged(ArrayList<User> theList) {
-                Log.d("ANTA40", "theList.size(): "+theList.size());
-                searchAdapter = new SearchAdapter(theList);
+                searchAdapter = new SearchAdapter(context, theList);
                 recyclerView.setAdapter(searchAdapter);
             }
         });
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         List<User> userList = new ArrayList<User>();
-        searchAdapter = new SearchAdapter(userList) ;
+        searchAdapter = new SearchAdapter(context, userList) ;
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(searchAdapter);
