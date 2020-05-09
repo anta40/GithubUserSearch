@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         setUpRecyclerView();
         currentPage = 1;
-        totalCount = 33; // currently hardcoded, because viewModel.getTotalCount() is not working correctly
-        TOTAL_PAGES = (int)Math.ceil((double) totalCount/(double) 30);
+        //totalCount = 33; // currently hardcoded, because viewModel.getTotalCount() is not working correctly
+
         viewModel = viewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
     }
@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(searchAdapter);
             }
         });
+
+        totalCount = viewModel.getTotalCount(); // not working. always returns 0 :(
+        TOTAL_PAGES = ((int)Math.ceil((double) totalCount/(double)30));
     }
 
     private void setUpRecyclerView() {
