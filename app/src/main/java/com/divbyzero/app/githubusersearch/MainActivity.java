@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 searchAdapter = new SearchAdapter(context, theList);
                 recyclerView.setAdapter(searchAdapter);
                 TOTAL_PAGES = viewModel.getTotalPages();
-                recyclerView.smoothScrollToPosition(viewModel.getCurrentSize());
+                searchAdapter.notifyDataSetChanged();
             }
         });
     }
