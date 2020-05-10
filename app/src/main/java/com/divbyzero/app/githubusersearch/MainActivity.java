@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = viewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
+
     }
 
     private void doSearchUser(String who, int pageNum) {
@@ -50,9 +51,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
             @Override
             public void onChanged(ArrayList<User> theList) {
-                searchAdapter = new SearchAdapter(context, theList);
-                recyclerView.setAdapter(searchAdapter);
                 TOTAL_PAGES = viewModel.getTotalPages();
+                searchAdapter.updateData(theList);
                 searchAdapter.notifyDataSetChanged();
             }
         });
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 who = query;
                 currentPage = 1;
                 searchAdapter.clear();
+                searchAdapter.notifyDataSetChanged();
                 doSearchUser(query, currentPage);
                 //searchAdapter.getFilter().filter(query);
                 return false;

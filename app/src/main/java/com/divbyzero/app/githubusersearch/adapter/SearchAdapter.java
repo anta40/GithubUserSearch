@@ -105,4 +105,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             notifyDataSetChanged();
         }
     };
+
+    public void updateData(List<User> newList){
+        this.theData.clear();
+        this.theData.addAll(newList);
+    }
 }
