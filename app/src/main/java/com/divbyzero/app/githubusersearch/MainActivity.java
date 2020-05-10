@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     SearchAdapter searchAdapter;
     RecyclerView recyclerView;
     Context context;
-    int currentPage, totalCount, TOTAL_PAGES;
+    int currentPage, TOTAL_PAGES;
     UserViewModel viewModel;
     String who;
 
@@ -39,14 +39,12 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         setUpRecyclerView();
         currentPage = 1;
-        //totalCount = 33; // currently hardcoded, because viewModel.getTotalCount() is not working correctly
 
         viewModel = viewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
     }
 
     private void doSearchUser(String who, int pageNum) {
-        totalCount = viewModel.getTotalCount();
         viewModel.setSearchResult(who, pageNum);
 
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
@@ -54,11 +52,10 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(ArrayList<User> theList) {
                 searchAdapter = new SearchAdapter(context, theList);
                 recyclerView.setAdapter(searchAdapter);
+                TOTAL_PAGES = viewModel.getTotalPages();
+                recyclerView.smoothScrollToPosition(viewModel.getCurrentSize());
             }
         });
-
-        totalCount = viewModel.getTotalCount(); // not working. always returns 0 :(
-        TOTAL_PAGES = ((int)Math.ceil((double) totalCount/(double)30));
     }
 
     private void setUpRecyclerView() {

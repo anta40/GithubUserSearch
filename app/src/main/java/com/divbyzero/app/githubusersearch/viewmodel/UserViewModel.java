@@ -22,7 +22,8 @@ import retrofit2.Retrofit;
 public class UserViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<User>> mutableLiveData = new MutableLiveData<>();
-    private int totalCount;
+    //private int totalCount;
+    private int TOTAL_PAGES;
     private ArrayList<User> savedData = new ArrayList<User>();
 
     public void setSearchResult(String who, int page){
@@ -33,10 +34,10 @@ public class UserViewModel extends ViewModel {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                 if (response.body() != null) {
+                        TOTAL_PAGES = ((int)Math.ceil((double) response.body().getTotalCount()/(double)30));
                         savedData.addAll(response.body().getItems());
                         //mutableLiveData.setValue((ArrayList<User>) response.body().getItems());
                         mutableLiveData.setValue(savedData);
-                        totalCount = response.body().getTotalCount();
                         Log.d("DBG", "OK");
                 }
             }
@@ -57,7 +58,11 @@ public class UserViewModel extends ViewModel {
         mutableLiveData.setValue(new ArrayList<User>());
     }
 
-    public int getTotalCount(){
-        return totalCount;
+    public int getTotalPages(){
+        return TOTAL_PAGES;
+    }
+
+    public int getCurrentSize(){
+        return savedData.size();
     }
 }
