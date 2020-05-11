@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     int currentPage, TOTAL_PAGES;
     UserViewModel viewModel;
     String who;
+    List<User> tmpList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
         setUpRecyclerView();
         currentPage = 1;
 
+        tmpList = new ArrayList<User>();
+
         viewModel = viewModel = new ViewModelProvider(this,
                 new ViewModelProvider.NewInstanceFactory()).get(UserViewModel.class);
 
     }
 
     private void doSearchUser(String who, int pageNum) {
+        searchAdapter.clear();
         viewModel.setSearchResult(who, pageNum);
 
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
@@ -53,9 +57,19 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(ArrayList<User> theList) {
                 TOTAL_PAGES = viewModel.getTotalPages();
                 searchAdapter.updateData(theList);
+                tmpList = theList;
+            }
+        });
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+               // searchAdapter.notifyItemInserted(tmpList.size() - 1);
                 searchAdapter.notifyDataSetChanged();
             }
         });
+
+       // searchAdapter.notifyDataSetChanged();
     }
 
     private void setUpRecyclerView() {
