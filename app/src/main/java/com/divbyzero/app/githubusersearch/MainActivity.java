@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void doSearchUser(String who, int pageNum) {
-        searchAdapter.clear();
         viewModel.setSearchResult(who, pageNum);
 
         viewModel.getSearchResult().observe(this, new Observer<ArrayList<User>>() {
@@ -57,19 +56,15 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(ArrayList<User> theList) {
                 TOTAL_PAGES = viewModel.getTotalPages();
                 searchAdapter.updateData(theList);
-                tmpList = theList;
+
+                recyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchAdapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
-
-        recyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-               // searchAdapter.notifyItemInserted(tmpList.size() - 1);
-                searchAdapter.notifyDataSetChanged();
-            }
-        });
-
-       // searchAdapter.notifyDataSetChanged();
     }
 
     private void setUpRecyclerView() {
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(!recyclerView.canScrollVertically(1) && dy != 0) {
                     if (currentPage < TOTAL_PAGES) {
-                        currentPage++;
+                        ++currentPage;
                         doSearchUser(who, currentPage);
                     }
                 }
@@ -111,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 who = query;
                 currentPage = 1;
                 searchAdapter.clear();
-                searchAdapter.notifyDataSetChanged();
                 doSearchUser(query, currentPage);
                 //searchAdapter.getFilter().filter(query);
                 return false;

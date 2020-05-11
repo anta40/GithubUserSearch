@@ -1,6 +1,7 @@
 package com.divbyzero.app.githubusersearch.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     public void clear() {
         int size = theData.size();
         theData.clear();
-        notifyItemRangeRemoved(0, size);
-        //notifyDataSetChanged();
+        Log.d("DBG", "Banyak data yg mau dihapus: "+size);
+        //notifyItemRangeRemoved(0, size);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -108,8 +110,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     };
 
     public void updateData(List<User> newList){
-        //this.theData.clear();
+        this.theData.clear();
         this.theData.addAll(newList);
-       // notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 }
