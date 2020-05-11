@@ -45,8 +45,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     public void clear() {
         int size = theData.size();
         theData.clear();
-        Log.d("DBG", "Banyak data yg mau dihapus: "+size);
-        //notifyItemRangeRemoved(0, size);
         notifyDataSetChanged();
     }
 
@@ -112,6 +110,5 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     public void updateData(List<User> newList){
         this.theData.clear();
         this.theData.addAll(newList);
-        //notifyDataSetChanged();
     }
 }

@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 who = query;
                 currentPage = 1;
                 searchAdapter.clear();
+                viewModel.clear();
                 doSearchUser(query, currentPage);
                 //searchAdapter.getFilter().filter(query);
                 return false;
